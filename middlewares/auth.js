@@ -10,7 +10,7 @@ exports.verify = (req, res, next) => {
         .json({ message: "Invalid Token"})
     }
 
-    req.userId = token.id;
+    req.userId = decoded.id;
     next();
   })
 }
