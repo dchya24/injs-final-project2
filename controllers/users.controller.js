@@ -1,6 +1,6 @@
 const { User } = require("../models");
 const bcryptHelper = require("../helpers/bcrypt");
-const jwt = require("../middlewares/jwt");
+const auth = require("../middlewares/auth");
 
 exports.register = async(req, res, next) => {
   try{
@@ -48,7 +48,7 @@ exports.register = async(req, res, next) => {
 
     return res.status(201)
       .json({
-        data: { user : user}
+        user : user
       })
   }
   catch(e){
@@ -57,34 +57,39 @@ exports.register = async(req, res, next) => {
 }
 
 exports.login = async(req, res, next) => {
-  const { email, password } = req.body;
+  try{
+    const { email, password } = req.body;
 
-  const user = await User.findOne({ where: { email: email }});
-
-  if(!user){
-    return res.status(403)
-      .json({
-        message: "User not found"
-      });
+    const user = await User.findOne({ where: { email: email }});
+  
+    if(!user){
+      return res.status(400)
+        .json({
+          message: "User not found"
+        });
+    }
+  
+    const isValid = bcryptHelper.compare(password, user.password)
+  
+    if(!isValid){
+      return res.status(403)
+        .json({
+          message: "Password not valid"
+        });
+    }
+  
+    const token = auth.generateToken({
+      id: user.id,
+      email: user.email,
+      name: user.full_name
+    })
+  
+    return res.status(200)
+    .json({
+        token: token
+    });
   }
-
-  const isValid = bcryptHelper.compare(password, user.password)
-
-  if(!isValid){
-    return res.status(402)
-      .json({
-        message: "Password not valid"
-      });
+  catch(e){
+    next(e)
   }
-
-  const token = jwt.generateToken({
-    id: user.id,
-    email: user.email,
-    name: user.full_name
-  })
-
-  return res.status(200)
-  .json({
-    token: token
-  });
 }
