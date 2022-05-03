@@ -69,7 +69,7 @@ exports.login = async(req, res, next) => {
         });
     }
   
-    const isValid = bcryptHelper.compare(password, user.password)
+    const isValid = bcryptHelper.compare(password, user.password);
   
     if(!isValid){
       return res.status(403)
@@ -91,5 +91,56 @@ exports.login = async(req, res, next) => {
   }
   catch(e){
     next(e)
+  }
+}
+
+exports.updateUser = async(req, res, next) => {
+  try{
+    if(req.userId != req.params.userId){
+      return res.status(401)
+        .json({
+          "message": "Error unauthorized" 
+        })
+    }
+    
+    const userId = req.params.userId
+    const {
+      email,
+      full_name,
+      username,
+      profile_image_url,
+      age,
+      phone_number
+    } = req.body;
+
+    const user = await User.findOne({
+      where: { id: userId}
+    });
+
+    if(!user){
+      return res.status(400)
+        .json({
+          message: "User not found"
+        });
+    }
+
+    user.update({
+      "email": email,
+      "full_name": full_name,
+      "username": username,
+      "profile_image_url": profile_image_url,
+      "age": age,
+      "phone_number": phone_number
+    });
+
+    await user.save();
+
+    return res.status(200)
+      .json({
+        "user": user
+      });
+  }
+  catch(e){
+    next(e);
   }
 }

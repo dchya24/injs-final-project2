@@ -15,7 +15,17 @@ const user_login = joi.object({
   password: joi.string().trim().required(),
 })
 
+const user_update = joi.object({
+  email: joi.string().trim().email().required(),
+  full_name: joi.string().trim().required(),
+  username: joi.string().trim().required(),
+  profile_image_url: joi.string().trim().uri().required(),
+  age: joi.number().required(),
+  phone_number: joi.number().required()
+})
+
 module.exports = {
   user_register,
-  user_login
+  user_login,
+  user_update
 }
