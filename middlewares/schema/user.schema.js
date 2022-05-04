@@ -24,8 +24,13 @@ const user_update = joi.object({
   phone_number: joi.number().required()
 })
 
+const user_param_userId = joi.object({
+  userId: joi.number().required()
+})
+
 module.exports = {
   user_register,
   user_login,
-  user_update
+  user_update,
+  user_param_userId
 }
