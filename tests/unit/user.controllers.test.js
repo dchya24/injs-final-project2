@@ -137,5 +137,43 @@ describe('UserController.updateUser', () => {
 
     await UserController.updateUser(req, res, next);
     expect(next).toHaveBeenCalled();
-  })
+  });
+});
+
+describe('UserController.deleteUser', () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  it("Should return 200 when success delete user", async() => {
+    req.userId = 1;
+    req.params.userId = 1;
+
+    User.destroy.mockResolvedValue(true);
+
+    await UserController.deleteUser(req, res, next);
+    expect(res.statusCode).toEqual(200);
+  });
+
+  it("Should return 401 when success delete user", async() => {
+    req.userId = 1;
+    req.params.userId = 1;
+
+
+    await UserController.deleteUser(req, res, next);
+    expect(res.statusCode).toEqual(200);
+  });
+
+  it("Should return 401 when access different id", async() => {
+    req.userId = 1;
+    req.params.userId = 2;
+    await UserController.deleteUser(req, res, next);
+    expect(res.statusCode).toEqual(401);
+    expect(res._getJSONData()).toHaveProperty("message", "Error unauthorized")
+  });
+
+  it("Should handle errors", async() => {
+    User.destroy.mockRejectedValue({ message: "Error saat update user"})
+
+    await UserController.deleteUser(req, res, next);
+    expect(next).toHaveBeenCalled();
+  });
 });

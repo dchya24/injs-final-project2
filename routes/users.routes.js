@@ -16,8 +16,15 @@ router.post("/login",
 
 router.put("/:userId",
   verify,
+  validator.validateParams(userSchema.user_param_userId),
   validator.validateRequest(userSchema.user_update),
   controller.updateUser
+)
+
+router.delete("/:userId",
+  verify,
+  validator.validateParams(userSchema.user_param_userId),
+  controller.deleteUser
 )
 
 module.exports = router

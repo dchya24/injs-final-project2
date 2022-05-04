@@ -96,14 +96,14 @@ exports.login = async(req, res, next) => {
 
 exports.updateUser = async(req, res, next) => {
   try{
-    if(req.userId != req.params.userId){
+    const userId = req.params.userId
+    if(req.userId != userId){
       return res.status(401)
         .json({
           "message": "Error unauthorized" 
         })
     }
     
-    const userId = req.params.userId
     const {
       email,
       full_name,
@@ -138,6 +138,30 @@ exports.updateUser = async(req, res, next) => {
     return res.status(200)
       .json({
         "user": user
+      });
+  }
+  catch(e){
+    next(e);
+  }
+}
+
+exports.deleteUser = async (req, res, next) => {
+  try{
+    const userId = req.params.userId;
+    if(req.userId != userId){
+      return res.status(401)
+        .json({
+          "message": "Error unauthorized" 
+        })
+    }
+
+    await User.destroy({
+      where: { id: userId }
+    })
+
+    return res.status(200)
+      .json({
+        message: "Your account has been successfully deleted"
       });
   }
   catch(e){
