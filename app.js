@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
-const userRoutes = require("./routes/users.routes")
+const userRoutes = require("./routes/users.routes");
+const photoRoutes = require("./routes/photos.routes");
 
 require("dotenv").config();
 const PORT = process.env.PORT || 3000;
@@ -14,7 +15,8 @@ app.get("/", async (req, res) => {
     })
 })
 
-app.use("/users", userRoutes)
+app.use("/users", userRoutes);
+app.use("/photos", photoRoutes);
 
 app.use((err, req, res, next) => {
   console.log(err)
