@@ -9,7 +9,18 @@ router.post("/",
   verify,
   validator.validateRequest(photoScema.photo_create),
   controller.createPhoto
-)
-
+);
 router.get("/", verify, controller.getPhotos);
+router.put("/:photoId",
+  verify,
+  validator.validateRequest(photoScema.photo_create),
+  validator.validateParams(photoScema.params_photoId),
+  controller.updatePhotos
+);
+router.delete("/:photoId",
+  verify,
+  validator.validateParams(photoScema.params_photoId),
+  controller.deletePhoto
+);
+
 module.exports = router
