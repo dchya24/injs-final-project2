@@ -60,3 +60,72 @@ exports.getPhotos = async(req, res, next) => {
     next(e);
   }
 }
+
+exports.updatePhotos = async(req, res, next) => {
+  try{
+    const photoId = req.params.photoId;
+    const userId = req.userId;
+    const {
+      title,
+      caption,
+      poster_image_url
+    } = req.body;
+  
+    const photo = await Photo.findOne({ 
+      where: { 
+        id: photoId,
+        UserId: userId
+      }
+    });
+  
+    if(!photo){
+      return res.status(404)
+      .json({
+        message: "Photo not found!"
+      });
+    }
+  
+    photo.title = title;
+    photo.caption = caption;
+    photo.poster_image_url = poster_image_url;
+  
+    await photo.save();
+
+    return res.status(200)
+    .json({
+      photo: photo
+    });
+  }
+  catch(e){
+    next(e);
+  }
+}
+
+exports.deletePhoto = async(req, res, next) => {
+  try{
+    const userId = req.userId;
+    const photoId = req.params.photoId;
+
+    const photo = await Photo.destroy({
+      where: {
+        id: photoId,
+        UserId: userId
+      }
+    });
+
+    if(!photo){
+      return res.status(404)
+      .json({
+        message: "Photo not found!"
+      });
+    }
+
+    return res.status(200)
+    .json({
+      message: "Your photo has been successfully deleted"
+    });
+  }
+  catch(e){
+    next(e);
+  }
+}
