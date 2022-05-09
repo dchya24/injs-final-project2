@@ -40,11 +40,10 @@ exports.register = async(req, res, next) => {
       "phone_number": phone_number
     })
 
-    delete user["id"];
-    delete user["password"];
-    delete user["createdAt"];
-    delete user["updatedAt"];
-    
+    delete user.dataValues.password;
+    delete user.dataValues.id;
+    delete user.dataValues.createdAt;
+    delete user.dataValues.updatedAt;
 
     return res.status(201)
       .json({
@@ -135,6 +134,11 @@ exports.updateUser = async(req, res, next) => {
 
     await user.save();
 
+    delete user.dataValues.password;
+    delete user.dataValues.id;
+    delete user.dataValues.createdAt;
+    delete user.dataValues.updatedAt;
+    
     return res.status(200)
       .json({
         "user": user

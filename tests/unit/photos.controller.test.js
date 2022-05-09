@@ -6,9 +6,11 @@ jest.mock("../../models");
 let req, res, next;
 
 const createPhoto = {
-  "title": "Lorem ipsum dolor",
-  "caption": "Doakosda asd asd asd asd asd asd as dasd asd123 fdssf sdf",
-  "poster_image_url": "https://en.gravatar.com/userimage/193518106/8dd06d2e40054d66db7d672acd303420?size=200",
+  dataValues: {
+    "title": "Lorem ipsum dolor",
+    "caption": "Doakosda asd asd asd asd asd asd as dasd asd123 fdssf sdf",
+    "poster_image_url": "https://en.gravatar.com/userimage/193518106/8dd06d2e40054d66db7d672acd303420?size=200"
+  }
 }
 const photos = [{
   "id": 6,

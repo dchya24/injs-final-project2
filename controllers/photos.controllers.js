@@ -15,11 +15,15 @@ exports.createPhoto = async(req, res, next) => {
       poster_image_url: poster_image_url,
       UserId: userId
     })
+
+    delete photo.dataValues.createdAt
+    delete photo.dataValues.updatedAt
   
     return res.status(201)
     .json(photo)
   }
   catch(e){
+    console.log(e);
     next(e);
   }
 }

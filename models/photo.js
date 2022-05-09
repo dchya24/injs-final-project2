@@ -42,13 +42,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Photo',
-    tableName: 'Photo',
-    hooks: {
-      afterCreate: (record) => {
-        delete record.dataValues.createdAt,
-        delete record.dataValues.updatedAt
-      }
-    }
+    tableName: 'Photo'
   });
   return Photo;
 };

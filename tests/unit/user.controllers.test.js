@@ -11,13 +11,27 @@ let data = {
   password: "123456"
 }
 
+let createUser = {
+  dataValues: {
+    email: "test@test.com",
+    password: "123456",
+    full_name: "Cahya Dinar P",
+    username: "test12",
+    profile_image_url: "https://en.gravatar.com/userimage/193518106/8dd06d2e40054d66db7d672acd303420?size=200",
+    age: 19,
+    phone_number: "0123132"
+  }
+}
+
 const updateUser = {
-  "email": "test22@test.com",
-  "full_name": "Cahya Dinar P",
-  "username": "test12",
-  "profile_image_url": "https://en.gravatar.com/userimage/193518106/8dd06d2e40054d66db7d672acd303420?size=200",
-  "age": 19,
-  "phone_number": "0123132"
+  dataValues: {
+    "email": "test22@test.com",
+    "full_name": "Cahya Dinar P",
+    "username": "test12",
+    "profile_image_url": "https://en.gravatar.com/userimage/193518106/8dd06d2e40054d66db7d672acd303420?size=200",
+    "age": 19,
+    "phone_number": "0123132"
+  }
 }
 
 beforeEach(() => {
@@ -70,7 +84,13 @@ describe("UserController.login", () => {
 describe("UserController.register", () => {
   it("Should return code 201 when success register", async() => {
     User.findOne.mockResolvedValue(null)
-    User.create.mockResolvedValue(data)
+    User.create.mockResolvedValue(createUser)
+    const hooks = {
+      afterCreate: jest.fn()
+    }
+    User.options = {
+      hooks: hooks
+    }
     bcryptHelper.hash = jest.fn().mockImplementation(() => "!23")
 
     await UserController.register(req, res, next);
