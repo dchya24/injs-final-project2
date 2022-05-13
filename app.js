@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const userRoutes = require("./routes/users.routes");
 const photoRoutes = require("./routes/photos.routes");
+const commentRoutes = require("./routes/comments.routes");
+const socmedRoutes = require("./routes/socmed.routes");
 
 require("dotenv").config();
 const PORT = process.env.PORT || 3000;
@@ -9,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 app.get("/", async (req, res) => {
-  return  res.status(200)
+  return res.status(200)
     .json({
       message: "Hello World!"
     })
@@ -17,6 +19,8 @@ app.get("/", async (req, res) => {
 
 app.use("/users", userRoutes);
 app.use("/photos", photoRoutes);
+app.use("/comments", commentRoutes);
+app.use("/socialmedias", socmedRoutes);
 
 app.use((err, req, res, next) => {
   console.log(err)
