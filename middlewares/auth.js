@@ -6,6 +6,7 @@ exports.verify = (req, res, next) => {
 
   jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if(err){
+      console.log(err);
       return res.status(402)
         .json({ message: "Invalid Token"})
     }

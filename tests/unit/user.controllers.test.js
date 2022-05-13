@@ -40,6 +40,20 @@ beforeEach(() => {
   next = jest.fn();
 });
 
+describe('UserController.getUser', () => {
+  it('Should return code 200', async() => {
+    User.findByPk.mockResolvedValue(createUser);
+
+    await UserController.getUser(req, res, next);
+    expect(res.statusCode).toEqual(200);
+    expect(res._getJSONData()).toHaveProperty("user");
+  });
+
+  it("Should handle errors", async() => {
+    User.findByPk.mockRejectedValue({ message: ""});
+  })
+});
+
 describe("UserController.login", () => {
   it("Should return code 200 when success login", async () => {
     bcryptHelper.compare = jest.fn().mockImplementation(() => true)

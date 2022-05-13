@@ -5,6 +5,11 @@ const validator = require("../middlewares/validator")
 const userSchema = require("../middlewares/schema/user.schema");
 const { verify } = require("../middlewares/auth")
 
+router.get("/",
+  verify,
+  controller.getUser
+);
+
 router.post("/register", 
   validator.validateRequest(userSchema.user_register),
   controller.register

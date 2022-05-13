@@ -22,23 +22,35 @@ Copy file `.env.example` and rename to `.env`. You can seting config environment
 
 ### Setup a database
 
-  1. Create database and run migration
-  2. Run the script
+- Create database and run migration
+- Run the script
 
-  ```bash
-    npx sequelize db:create && npx sequelize migration:generate
-  ```
-  
-  Or import database in `config/db.sql`
+```bash
+  npm run db:create && npm run db:generate
+```
+
+- Generate Seeders
+
+``` bash
+    npm run db:seed
+```
 
 ### Run Program
+
+Run with nodemon
 
 ```bash
   npm run dev
 ```
 
+Run with node
+
+```bash
+  npm start
+```
+
 ### Testing Program
 
 ```bash
-  npm test
+  npm run test
 ```

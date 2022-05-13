@@ -172,3 +172,21 @@ exports.deleteUser = async (req, res, next) => {
     next(e);
   }
 }
+
+exports.getUser = async (req, res, next) => {
+  try{
+    const userId = req.userId;
+    const user = await User.findByPk(userId);
+    delete user.dataValues.password;
+    delete user.dataValues.createdAt;
+    delete user.dataValues.updatedAt;
+
+    return res.status(200)
+      .json({
+        user: user
+      });
+  }
+  catch(e){
+    next(e);
+  }
+}
