@@ -4,9 +4,7 @@ PhotoAlbum Apps
 
 Final Project 2 from Kampus Merdeka - Introduce to NodeJS  
 
-For list API see [api list](./list_api.md)
-
-URL apps [link](https://injs-finalproject1.herokuapp.com/)
+URL apps [link](https://injs-finalproject2.herokuapp.com/)
 
 ## Installation
 
