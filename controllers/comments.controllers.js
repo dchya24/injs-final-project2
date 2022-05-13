@@ -1,4 +1,4 @@
-const { Comment, User } = require("../models");
+const { Comment, User, Photo } = require("../models");
 
 exports.createComment = async (req, res, next) => {
     try {
@@ -14,7 +14,7 @@ exports.createComment = async (req, res, next) => {
         })
 
         return res.status(201)
-            .json(comments)
+            .json({ comment: comments })
     }
     catch (e) {
         console.log(e);
@@ -27,6 +27,11 @@ exports.getComment = async (req, res, next) => {
         const userId = req.userId;
         const comments = await Comment.findAll({
             include: [
+                {
+                    model: Photo,
+                    as: 'Photo',
+                    attributes: ['id', 'title', 'caption', 'poster_image_url']
+                },
                 {
                     model: User,
                     as: 'User',
@@ -50,14 +55,15 @@ exports.getComment = async (req, res, next) => {
 exports.updateComment = async (req, res, next) => {
     try {
         const userId = req.userId;
+        const commentId = req.params.commentId
         const {
-            comment,
-            photoId
+            comment
         } = req.body;
 
         const comments = await Comment.findOne({
             where: {
-                UserId: userId
+                UserId: userId,
+                id: commentId
             }
         });
 
@@ -69,7 +75,6 @@ exports.updateComment = async (req, res, next) => {
         }
 
         comments.comment = comment;
-        comments.PhotoId = photoId;
 
         await comments.save();
 
@@ -86,10 +91,12 @@ exports.updateComment = async (req, res, next) => {
 exports.deleteComment = async (req, res, next) => {
     try {
         const userId = req.userId;
+        const commentId = req.params.commentId;
 
         const comments = await Comment.destroy({
             where: {
-                UserId: userId
+                UserId: userId,
+                id: commentId
             }
         });
 

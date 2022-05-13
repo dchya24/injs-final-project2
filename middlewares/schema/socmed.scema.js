@@ -5,6 +5,6 @@ exports.socmed_create = joi.object({
     name: joi.string().trim().required()
 });
 
-exports.params_userId = joi.object({
-    userId: joi.number().required()
+exports.socmed_params = joi.object({
+    socmedId: joi.number().required()
 });

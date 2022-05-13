@@ -14,12 +14,12 @@ router.get("/", verify, controller.getSocmed);
 router.put("/:socmedId",
     verify,
     validator.validateRequest(socmedScema.socmed_create),
-    validator.validateParams(socmedScema.params_userId),
+    validator.validateParams(socmedScema.socmed_params),
     controller.updateSocmed
 );
 router.delete("/:socmedId",
     verify,
-    validator.validateParams(socmedScema.params_userId),
+    validator.validateParams(socmedScema.socmed_params),
     controller.deleteSocmed
 );
 

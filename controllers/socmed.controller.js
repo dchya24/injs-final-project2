@@ -16,7 +16,7 @@ exports.createSocmed = async (req, res, next) => {
         })
 
         return res.status(201)
-            .json(social_media)
+            .json({ social_media: social_media })
     }
     catch (e) {
         console.log(e);
@@ -52,6 +52,8 @@ exports.getSocmed = async (req, res, next) => {
 exports.updateSocmed = async (req, res, next) => {
     try {
         const userId = req.userId;
+        const socialMediaId = req.params.socmedId;
+        
         const {
             social_media_url,
             name
@@ -59,7 +61,8 @@ exports.updateSocmed = async (req, res, next) => {
 
         const social_media = await SocialMedia.findOne({
             where: {
-                UserId: userId
+                UserId: userId,
+                id: socialMediaId
             }
         });
 
@@ -88,10 +91,12 @@ exports.updateSocmed = async (req, res, next) => {
 exports.deleteSocmed = async (req, res, next) => {
     try {
         const userId = req.userId;
+        const socmedId = req.params.socmedId;
 
         const social_media = await SocialMedia.destroy({
             where: {
-                UserId: userId
+                UserId: userId,
+                id: socmedId
             }
         });
 

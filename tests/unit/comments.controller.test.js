@@ -31,13 +31,13 @@ beforeEach(() => {
     next = jest.fn();
 });
 
-describe('CommentsController.getComments', () => {
+describe('CommentsController.getComment', () => {
     it("Should return 200 and return comments", async () => {
         req.userId = 3
 
         Comment.findAll.mockResolvedValue(comments);
 
-        await CommentsController.getComments(req, res, next);
+        await CommentsController.getComment(req, res, next);
 
         expect(res.statusCode).toEqual(200);
         expect(res._getJSONData()).toHaveProperty("comments", comments)
@@ -47,7 +47,7 @@ describe('CommentsController.getComments', () => {
         req.userId = 3;
         Comment.findAll.mockRejectedValue({ message: "Handle error getComments" });
 
-        await CommentsController.getComments(req, res, next);
+        await CommentsController.getComment(req, res, next);
         expect(next).toHaveBeenCalled();
     })
 });
@@ -72,25 +72,31 @@ describe('CommentsController.createComment', () => {
 
 describe('CommentsController.updateComment', () => {
     it("Should return code 200 and comment", async () => {
-        Comment.update.mockResolvedValue(updateComment);
+        req.body = updateComment;
+
+        Comment.findOne.mockResolvedValue({
+            ...updateComment,
+            save: jest.fn()
+        });
 
         await CommentsController.updateComment(req, res, next);
 
+        console.log(res._getData())
         expect(res.statusCode).toEqual(200);
-        expect(res._getJSONData()).toHaveProperty("comment", updateComment)
+        expect(res._getJSONData()).toHaveProperty("comments")
     })
 
     it("Should return 404 when socmed not found", async () => {
-        Comment.update.mockResolvedValue(null);
+        Comment.findOne.mockResolvedValue(null);
 
         await CommentsController.updateComment(req, res, next);
 
         expect(res.statusCode).toEqual(404);
-        expect(res._getJSONData()).toHaveProperty("message", "Comment not found");
+        expect(res._getJSONData()).toHaveProperty("message", "Comment not found!");
     })
 
     it("Should handle errors", async () => {
-        Comment.update.mockRejectedValue({ message: "Handle error updateComment" });
+        Comment.findOne.mockRejectedValue({ message: "Handle error updateComment" });
 
         await CommentsController.updateComment(req, res, next);
         expect(next).toHaveBeenCalled();
@@ -104,7 +110,7 @@ describe('CommentsController.deleteComment', () => {
         await CommentsController.deleteComment(req, res, next);
 
         expect(res.statusCode).toEqual(200);
-        expect(res._getJSONData()).toHaveProperty("message", "Comment deleted");
+        expect(res._getJSONData()).toHaveProperty("message", "Your comment has been successfully deleted");
     });
 
     it("Should return 404 when comment not found", async () => {
@@ -112,7 +118,7 @@ describe('CommentsController.deleteComment', () => {
 
         await CommentsController.deleteComment(req, res, next);
         expect(res.statusCode).toEqual(404);
-        expect(res._getJSONData()).toHaveProperty("message", "Comment not found");
+        expect(res._getJSONData()).toHaveProperty("message", "Comment not found!");
     });
 
     it("Should handle errors", async () => {

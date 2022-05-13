@@ -1,11 +1,13 @@
 const express = require("express");
 const app = express();
+
+require("dotenv").config();
+
 const userRoutes = require("./routes/users.routes");
 const photoRoutes = require("./routes/photos.routes");
 const commentRoutes = require("./routes/comments.routes");
 const socmedRoutes = require("./routes/socmed.routes");
 
-require("dotenv").config();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());

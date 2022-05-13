@@ -13,13 +13,13 @@ router.post("/",
 router.get("/", verify, controller.getComment);
 router.put("/:commentId",
     verify,
-    validator.validateRequest(commentScema.comment_create),
-    validator.validateParams(commentScema.params_photoId),
+    validator.validateRequest(commentScema.comment_update),
+    validator.validateParams(commentScema.params_commentId),
     controller.updateComment
 );
 router.delete("/:commentId",
     verify,
-    validator.validateParams(commentScema.params_photoId),
+    validator.validateParams(commentScema.params_commentId),
     controller.deleteComment
 );
 

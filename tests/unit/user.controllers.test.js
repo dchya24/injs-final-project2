@@ -50,7 +50,10 @@ describe('UserController.getUser', () => {
   });
 
   it("Should handle errors", async() => {
-    User.findByPk.mockRejectedValue({ message: ""});
+    User.findByPk.mockRejectedValue({ message: "Error handle getUser"});
+    
+    await UserController.getUser(req, res, next);
+    expect(next).toHaveBeenCalled();
   })
 });
 
