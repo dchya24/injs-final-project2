@@ -150,6 +150,7 @@ describe('UserController.updateUser', () => {
 
     await UserController.updateUser(req, res, next);
     expect(res.statusCode).toEqual(200);
+    console.log(res._getData());
   });
 
   it("Should return 401 when access different id", async() => {

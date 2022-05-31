@@ -41,7 +41,6 @@ exports.register = async(req, res, next) => {
     })
 
     delete user.dataValues.password;
-    delete user.dataValues.id;
     delete user.dataValues.createdAt;
     delete user.dataValues.updatedAt;
 
@@ -135,7 +134,6 @@ exports.updateUser = async(req, res, next) => {
     await user.save();
 
     delete user.dataValues.password;
-    delete user.dataValues.id;
     delete user.dataValues.createdAt;
     delete user.dataValues.updatedAt;
     
@@ -145,6 +143,7 @@ exports.updateUser = async(req, res, next) => {
       });
   }
   catch(e){
+    console.log(e.message)
     next(e);
   }
 }
