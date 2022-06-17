@@ -69,7 +69,7 @@ exports.updateSocmed = async (req, res, next) => {
         if (!social_media) {
             return res.status(404)
                 .json({
-                    message: "Socmed not found!"
+                    message: "SocialMedia not found!"
                 });
         }
 
@@ -103,7 +103,7 @@ exports.deleteSocmed = async (req, res, next) => {
         if (!social_media) {
             return res.status(404)
                 .json({
-                    message: "Socmed not found!"
+                    message: "SocialMedia not found!"
                 });
         }
 

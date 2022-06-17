@@ -19,7 +19,7 @@ beforeAll(async () => {
 describe('POST socmeds', () => {
     it('Should send response with code 200', (done) => {
         request(app)
-            .post('/socmeds/')
+            .post('/socialmedias/')
             .set("x-access-token", token)
             .send({
                 name: "test",
@@ -30,17 +30,19 @@ describe('POST socmeds', () => {
                     done(err)
                 }
 
-                socmed = res.body.socmed
+                socmed = res.body.social_media
                 expect(res.status).toEqual(201);
                 expect(typeof res.body).toEqual("object");
-                expect(res.body).toHaveProperty("socmed");
-                expect(typeof res.body.socmed).toEqual("object");
+                expect(res.body).toHaveProperty("social_media");
+                expect(typeof res.body.social_media).toEqual("object");
+                expect(res.body.social_media.name).toEqual("test")
                 done();
             })
     });
+
     it('Should send response with code 422 when params not yet', (done) => {
         request(app)
-            .post('/socmeds/')
+            .post('/socialmedias/')
             .set("x-access-token", token)
             .send({
                 socmedId: socmed.id
@@ -50,10 +52,31 @@ describe('POST socmeds', () => {
                     done(err)
                 }
 
-                console.log(res.body);
                 expect(res.status).toEqual(422);
                 expect(typeof res.body).toEqual("object");
                 expect(res.body).toHaveProperty("status", 'FAILED')
+                expect(res.body).toHaveProperty("message")
+                expect(typeof res.body.message).toEqual("string")
+                done();
+            })
+    });
+
+    it('Should send response with code 402 when user not have token', (done) => {
+        request(app)
+            .post('/socialmedias/')
+            .send({
+                socmedId: socmed.id
+            })
+            .end((err, res) => {
+                if (err) {
+                    done(err)
+                }
+
+                expect(res.status).toEqual(402);
+                expect(typeof res.body).toEqual("object");
+                expect(res.body).toHaveProperty("message")
+                expect(typeof res.body.message).toEqual("string")
+                expect(res.body.message).toEqual("Invalid Token")
                 done();
             })
     });
@@ -62,7 +85,7 @@ describe('POST socmeds', () => {
 describe('GET socmeds', () => {
     it('Should send response with code 200', (done) => {
         request(app)
-            .get('/socmeds/')
+            .get('/socialmedias/')
             .set("x-access-token", token)
             .end((err, res) => {
                 if (err) {
@@ -71,15 +94,16 @@ describe('GET socmeds', () => {
 
                 expect(res.status).toEqual(200);
                 expect(typeof res.body).toEqual("object");
-                expect(res.body).toHaveProperty("socmeds");
-                expect(typeof res.body.socmeds).toEqual("object");
+                expect(res.body).toHaveProperty("social_medias");
+                expect(typeof res.body.social_medias).toEqual("object");
+                expect(res.body.social_medias[0]).toHaveProperty("User");
                 done();
             })
     });
 
     it('Should return error 402 when user dont have token', (done) => {
         request(app)
-            .get('/socmeds/')
+            .get('/socialmedias/')
             .end((err, res) => {
                 if (err) {
                     done(err)
@@ -88,6 +112,7 @@ describe('GET socmeds', () => {
                 expect(res.status).toEqual(402);
                 expect(typeof res.body).toEqual("object");
                 expect(res.body).toHaveProperty("message");
+                expect(typeof res.body.message).toEqual("string");
                 expect(res.body.message).toEqual("Invalid Token");
                 done();
             })
@@ -97,10 +122,11 @@ describe('GET socmeds', () => {
 describe('PUT socmeds', () => {
     it('Should send response with code 200', (done) => {
         request(app)
-            .put('/socmeds/' + socmed.id)
+            .put('/socialmedias/' + socmed.id)
             .set("x-access-token", token)
             .send({
-                socmed: "updated social media"
+                name: "updated social media",
+                social_media_url: "https://www.facebook-update.com"
             })
             .end((err, res) => {
                 if (err) {
@@ -109,19 +135,20 @@ describe('PUT socmeds', () => {
 
                 expect(res.status).toEqual(200);
                 expect(typeof res.body).toEqual("object");
-                expect(res.body).toHaveProperty("socmeds");
-                expect(typeof res.body.socmeds).toEqual("object");
-                expect(res.body.socmeds.socmed).toEqual("updated social media");
+                expect(res.body).toHaveProperty("social_media");
+                expect(typeof res.body.social_media).toEqual("object");
+                expect(res.body.social_media.name).toEqual("updated social media");
                 done();
             })
     });
 
     it('Should send response with code 404 when socail media not found', (done) => {
         request(app)
-            .put('/socmeds/322')
+            .put('/socialmedias/322')
             .set("x-access-token", token)
             .send({
-                scomed: "updated social media"
+                name: "updated social media",
+                social_media_url: "https://www.facebook-update.com"
             })
             .end((err, res) => {
                 if (err) {
@@ -131,13 +158,36 @@ describe('PUT socmeds', () => {
                 expect(res.status).toEqual(404);
                 expect(typeof res.body).toEqual("object");
                 expect(res.body).toHaveProperty("message");
+                expect(typeof res.body.message).toEqual("string");
+                expect(res.body.message).toEqual("SocialMedia not found!")
+                done();
+            })
+    });
+
+    it('Handle when users dont have token with return code 402', (done) => {
+        request(app)
+            .put('/socialmedias/322')
+            .send({
+                name: "updated social media",
+                social_media_url: "https://www.facebook-update.com"
+            })
+            .end((err, res) => {
+                if (err) {
+                    done(err)
+                }
+
+                expect(res.status).toEqual(402);
+                expect(typeof res.body).toEqual("object");
+                expect(res.body).toHaveProperty("message");
+                expect(typeof res.body.message).toEqual("string");
+                expect(res.body.message).toEqual("Invalid Token");
                 done();
             })
     });
 
     it('Handle when users dont have req.body social media', (done) => {
         request(app)
-            .put('/socmeds/322')
+            .put('/socialmedias/322')
             .set("x-access-token", token)
             .end((err, res) => {
                 if (err) {
@@ -147,7 +197,8 @@ describe('PUT socmeds', () => {
                 expect(res.status).toEqual(422);
                 expect(typeof res.body).toEqual("object");
                 expect(res.body).toHaveProperty("status", 'FAILED')
-                expect(res.body).toHaveProperty("message", '"social media" is required')
+                expect(res.body).toHaveProperty("message")
+                expect(typeof res.body.message).toEqual("string");
                 done();
             })
     });
@@ -156,7 +207,7 @@ describe('PUT socmeds', () => {
 describe('Delete socmeds', () => {
     it('Should send response with code 200', (done) => {
         request(app)
-            .delete('/socmeds/' + socmed.id)
+            .delete('/socialmedias/' + socmed.id)
             .set("x-access-token", token)
             .end((err, res) => {
                 if (err) {
@@ -166,14 +217,33 @@ describe('Delete socmeds', () => {
                 expect(res.status).toEqual(200);
                 expect(typeof res.body).toEqual("object");
                 expect(res.body).toHaveProperty("message");
+                expect(typeof res.body.message).toEqual("string");
                 expect(res.body.message).toEqual("Your social media has been successfully deleted")
+                done();
+            })
+    });
+
+    it('Should send response with code 422 when when params id not integer', (done) => {
+        request(app)
+            .delete('/socialmedias/322a')
+            .set("x-access-token", token)
+            .end((err, res) => {
+                if (err) {
+                    done(err)
+                }
+
+                expect(res.status).toEqual(422);
+                expect(typeof res.body).toEqual("object");
+                expect(res.body).toHaveProperty("status", "FAILED");
+                expect(res.body).toHaveProperty("message");
+                expect(res.body.message).toEqual('"socmedId" must be a number')
                 done();
             })
     });
 
     it('Should send response with code 404 when social media not found', (done) => {
         request(app)
-            .delete('/socmeds/322')
+            .delete('/socialmedias/322')
             .set("x-access-token", token)
             .end((err, res) => {
                 if (err) {
@@ -183,6 +253,7 @@ describe('Delete socmeds', () => {
                 expect(res.status).toEqual(404);
                 expect(typeof res.body).toEqual("object");
                 expect(res.body).toHaveProperty("message");
+                expect(typeof res.body.message).toEqual("string");
                 expect(res.body.message).toEqual("SocialMedia not found!")
                 done();
             })
@@ -190,7 +261,7 @@ describe('Delete socmeds', () => {
 
     it('Should send response with code 402 when user dont have token', (done) => {
         request(app)
-            .delete('/socmeds/322')
+            .delete('/socialmedias/322')
             .end((err, res) => {
                 if (err) {
                     done(err)
@@ -199,6 +270,7 @@ describe('Delete socmeds', () => {
                 expect(res.status).toEqual(402);
                 expect(typeof res.body).toEqual("object");
                 expect(res.body).toHaveProperty("message");
+                expect(typeof res.body.message).toEqual("string");
                 expect(res.body.message).toEqual("Invalid Token")
                 done();
             })
@@ -209,10 +281,10 @@ afterAll((done) => {
     sequelize.queryInterface.bulkDelete('SocialMedia', {
         id: socmed.id
     })
-        .then(() => {
-            return done()
-        })
-        .catch(err => {
-            done(err);
-        })
+    .then(() => {
+        return done()
+    })
+    .catch(err => {
+        done(err);
+    })
 })

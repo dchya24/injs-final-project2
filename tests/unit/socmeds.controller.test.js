@@ -94,7 +94,7 @@ describe('SocmedController.updateSocmed', () => {
         await SocmedController.updateSocmed(req, res, next);
 
         expect(res.statusCode).toEqual(404);
-        expect(res._getJSONData()).toHaveProperty("message", "Socmed not found!")
+        expect(res._getJSONData()).toHaveProperty("message", "SocialMedia not found!")
     });
 
     it("Should handle errors", async () => {
@@ -130,6 +130,6 @@ describe('SocmedController.deleteSocmed', () => {
         await SocmedController.deleteSocmed(req, res, next);
 
         expect(res.statusCode).toEqual(404);
-        expect(res._getJSONData()).toHaveProperty("message", "Socmed not found!")
+        expect(res._getJSONData()).toHaveProperty("message", "SocialMedia not found!")
     });
 });
