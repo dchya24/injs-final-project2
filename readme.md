@@ -52,3 +52,9 @@ Run with node
 ```bash
   npm run test
 ```
+
+### Integration Testing
+
+```bash
+  npm run test:integration
+```

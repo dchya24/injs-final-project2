@@ -11,6 +11,7 @@
     "test:db:migrate": "npx sequelize db:migrate --env=test",
     "test:db:migrate:undo": " npx sequelize db:migrate:undo:all --env=test",
     "test:db:seed": "npx sequelize db:seed:all --env=test",
+    "test:integration": "jest tests/integration --forceExit",
     "db:create": "sequelize db:create",
     "db:migrate": "sequelize db:migrate",
     "db:seed": "sequelize db:seed"
